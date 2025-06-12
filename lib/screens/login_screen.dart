@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/configs/navigation.dart';
 import 'package:my_app/cubits/login_cubit.dart';
-import 'package:my_app/screens/profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,9 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const ProfilePage()));
+              Navigator.of(context).pushNamed(Navigation.profileScreen);
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(
                 context,
