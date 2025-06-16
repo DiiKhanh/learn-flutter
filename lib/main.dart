@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/cubits/login_cubit.dart';
 import 'package:my_app/cubits/profile_cubit.dart';
 import 'package:my_app/data/repositories/authen_repository_imp.dart';
+import 'package:my_app/data/repositories/user_repository_imp.dart';
 import 'package:my_app/screens/edit_profile_screen.dart';
 import 'package:my_app/screens/login_screen.dart';
 import 'package:my_app/screens/profile_screen.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProfileCubit(),
+      create: (_) => ProfileCubit(userRepository: UserRepositoryImp()),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
             case '/profile':
               return MaterialPageRoute(
                 builder: (context) {
-                  context.read<ProfileCubit>().loadProfile();
+                  context.read<ProfileCubit>().loadProfile('4');
                   return const ProfileScreen();
                 },
               );

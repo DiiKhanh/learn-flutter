@@ -1,55 +1,62 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/data/models/user_model.dart';
+import 'package:my_app/domain/repositories/user_repository.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(ProfileInitial());
+  final UserRepository userRepository;
 
-  Future<void> loadProfile() async {
+  ProfileCubit({required UserRepository userRepository})
+    : userRepository = userRepository,
+      super(ProfileInitial());
+
+  Future<void> loadProfile(String id) async {
+    emit(ProfileLoading());
     try {
-      emit(ProfileLoading());
-      await Future.delayed(const Duration(seconds: 1));
+      final data = await userRepository.getProfile(id);
       emit(
         ProfileLoaded(
-          username: 'hoangnguyen18',
-          name: 'Hoang Nguyen',
-          email: 'hoang.nguyen@stacktech.org',
-          phone: '+84912885565',
-          address: 'Huynh Tan Phat Street, District 7',
-          nationality: 'China',
+          username: data.username!,
+          name: '${data.name?.firstName} ${data.name?.lastName}',
+          email: data.email!,
+          phone: data.phone!,
+          address: '${data.address.street}',
+          nationality: '${data.address.city}',
           role: 'Operator Admin',
           active: ActiveAcount.activated,
         ),
       );
     } catch (e) {
-      emit(const ProfileError('Failed to load profile'));
+      emit(ProfileError((e.toString())));
     }
   }
 
-  Future<void> updateProfile({
-    required String name,
-    required String email,
-    required String phone,
-    required String address,
-    required String nationality,
-  }) async {
+  Future<void> updateProfile({required UserModel request}) async {
+    emit(EditProfileLoading());
     try {
-      emit(EditProfileLoading());
-      await Future.delayed(const Duration(seconds: 1));
-      emit(const EditProfileUpdated('Profile updated successfully!'));
+      final user = UserModel(
+        email: request.email,
+        phone: request.phone,
+        address: Address(request.address.city, request.address.street),
+        name: Name(request.name?.firstName, request.name?.lastName),
+        username: request.username,
+      );
+
+      final data = await userRepository.updateProfile('4', user);
       emit(
         ProfileLoaded(
-          username: 'hoangnguyen18',
-          name: name,
-          email: email,
-          phone: phone,
-          address: address,
-          nationality: nationality,
-          role: 'Admin',
+          username: data.username!,
+          name: '${data.name?.firstName} ${data.name?.lastName}',
+          email: data.email!,
+          phone: data.phone!,
+          address: '${data.address.street}',
+          nationality: '${data.address.city}',
+          role: 'Operator Admin',
           active: ActiveAcount.activated,
         ),
       );
     } catch (e) {
-      emit(const EditProfileError('Failed to update profile'));
+      emit(EditProfileError((e.toString())));
     }
   }
 }

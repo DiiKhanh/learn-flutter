@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/configs/ui/dimens.dart';
 import 'package:my_app/cubits/profile_cubit.dart';
+import 'package:my_app/data/models/user_model.dart';
 import 'package:my_app/widgets/avatar.dart';
 import 'package:my_app/widgets/dropdown_field_info.dart';
 import 'package:my_app/widgets/tag.dart';
@@ -31,6 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     'United Kingdom',
     'Japan',
     'China',
+    'San Antonio',
     'Other',
   ];
 
@@ -44,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _addressController = TextEditingController();
     _nationalityController = TextEditingController();
 
-    context.read<ProfileCubit>().loadProfile();
+    context.read<ProfileCubit>().loadProfile('4');
   }
 
   @override
@@ -199,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         // Address Field
                         const TextLabelInfo(label: 'ADDRESS'),
                         TextFieldInfo(
-                          controller: _phoneController,
+                          controller: _addressController,
                           hintText: 'Address',
                         ),
 
@@ -260,13 +262,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _onUpdateProfile() {
     if (_formKey.currentState!.validate()) {
-      context.read<ProfileCubit>().updateProfile(
-        name: _nameController.text,
+      final user = UserModel(
+        username: _accountController.text,
+        name: Name(_nameController.text, ''),
         email: _emailController.text,
         phone: _phoneController.text,
-        address: _addressController.text,
-        nationality: _nationalityController.text,
+        address: Address(_nationalityController.text, _addressController.text),
       );
+      context.read<ProfileCubit>().updateProfile(request: user);
     }
   }
 }

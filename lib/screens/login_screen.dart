@@ -4,6 +4,7 @@ import 'package:my_app/configs/navigation.dart';
 import 'package:my_app/configs/ui/dimens.dart';
 import 'package:my_app/cubits/login_cubit.dart';
 import 'package:my_app/utils/validation.dart';
+import 'package:my_app/utils/shared_prefs.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +18,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _hidePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkTokenAndNavigate();
+  }
+
+  Future<void> _checkTokenAndNavigate() async {
+    final token = SharedPrefs.getString('auth_token');
+    if (token != null && token.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacementNamed(Navigation.profileScreen);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -35,9 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            // ScaffoldMessenger.of(
-            //   context,
-            // ).showSnackBar(SnackBar(content: Text(state.token)));
             Navigator.of(context).pushNamed(Navigation.profileScreen);
           } else if (state is LoginFailure) {
             ScaffoldMessenger.of(

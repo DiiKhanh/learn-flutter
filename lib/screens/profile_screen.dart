@@ -4,6 +4,7 @@ import 'package:my_app/configs/navigation.dart';
 import 'package:my_app/configs/ui/app_text_styles.dart';
 import 'package:my_app/configs/ui/dimens.dart';
 import 'package:my_app/cubits/profile_cubit.dart';
+import 'package:my_app/utils/shared_prefs.dart';
 import 'package:my_app/widgets/avatar.dart';
 import 'package:my_app/widgets/info_card.dart';
 import 'package:my_app/widgets/separator.dart';
@@ -29,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => _clearToken(context),
         ),
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
@@ -160,6 +161,13 @@ class ProfileScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> _clearToken(BuildContext context) async {
+    await SharedPrefs.remove('auth_token');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushReplacementNamed(Navigation.loginScreen);
+    });
   }
 
   Widget _buildActionButton({
