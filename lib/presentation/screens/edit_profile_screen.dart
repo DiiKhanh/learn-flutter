@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/applications/cubits/profile_state.dart';
+import 'package:my_app/configs/ui/app_text_styles.dart';
 import 'package:my_app/configs/ui/dimens.dart';
-import 'package:my_app/cubits/profile_cubit.dart';
+import 'package:my_app/applications/cubits/profile_cubit.dart';
 import 'package:my_app/data/models/user_model.dart';
-import 'package:my_app/widgets/avatar.dart';
-import 'package:my_app/widgets/dropdown_field_info.dart';
-import 'package:my_app/widgets/tag.dart';
-import 'package:my_app/widgets/text_field_info.dart';
-import 'package:my_app/widgets/text_label_info.dart';
+import 'package:my_app/presentation/widgets/avatar.dart';
+import 'package:my_app/presentation/widgets/dropdown_field_info.dart';
+import 'package:my_app/presentation/widgets/tag.dart';
+import 'package:my_app/presentation/widgets/text_field_info.dart';
+import 'package:my_app/presentation/widgets/text_label_info.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -65,14 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Edit Account Info',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: Text('Edit Account Info', style: AppTextStyles.h4Bold),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -128,11 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             children: [
                               Text(
                                 state.name,
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
+                                style: AppTextStyles.h4LargeBold,
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -141,11 +132,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 child: Text(
                                   state.active.name.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: AppTextStyles.smallRedText,
                                 ),
                               ),
                               TagWidget(text: state.role),
@@ -234,14 +221,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           elevation: 0,
                         ),
-                        child: const Text(
+                        child: Text(
                           'UPDATE PROFILE',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1,
-                          ),
+                          style: AppTextStyles.bodyLargeBold,
                         ),
                       ),
                     ),

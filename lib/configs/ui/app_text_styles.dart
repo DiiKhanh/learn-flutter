@@ -21,8 +21,13 @@ abstract final class AppTextStyles {
     fontSize: 32,
     color: AppColors.current.greyscale900,
   );
+  static TextStyle h4LargeBold = _baseTextStyle.copyWith(
+    fontWeight: FontWeight.bold,
+    fontSize: 24,
+    color: Colors.black,
+  );
   static TextStyle h4Bold = _baseTextStyle.copyWith(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.bold,
     fontSize: 24,
     color: Colors.black,
   );
@@ -68,7 +73,7 @@ abstract final class AppTextStyles {
   static TextStyle bodyLargeBold = _baseTextStyle.copyWith(
     fontWeight: FontWeight.w700,
     fontSize: 16,
-    color: AppColors.current.greyscale900,
+    color: Colors.black,
   );
   static TextStyle bodyLargeSemiBold = _baseTextStyle.copyWith(
     fontWeight: FontWeight.w600,
@@ -147,6 +152,12 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w400,
     fontSize: 10,
     color: AppColors.current.greyscale900,
+  );
+
+  static TextStyle smallRedText = _baseTextStyle.copyWith(
+    fontWeight: FontWeight.w500,
+    fontSize: 16,
+    color: Colors.red,
   );
 }
 

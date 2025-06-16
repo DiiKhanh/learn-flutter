@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/applications/cubits/profile_state.dart';
+import 'package:my_app/configs/constants.dart';
 import 'package:my_app/configs/navigation.dart';
 import 'package:my_app/configs/ui/app_text_styles.dart';
 import 'package:my_app/configs/ui/dimens.dart';
-import 'package:my_app/cubits/profile_cubit.dart';
+import 'package:my_app/applications/cubits/profile_cubit.dart';
+import 'package:my_app/presentation/widgets/button_action.dart';
 import 'package:my_app/utils/shared_prefs.dart';
-import 'package:my_app/widgets/avatar.dart';
-import 'package:my_app/widgets/info_card.dart';
-import 'package:my_app/widgets/separator.dart';
-import 'package:my_app/widgets/tag.dart';
+import 'package:my_app/presentation/widgets/avatar.dart';
+import 'package:my_app/presentation/widgets/info_card.dart';
+import 'package:my_app/presentation/widgets/separator.dart';
+import 'package:my_app/presentation/widgets/tag.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -18,14 +21,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Staff Profile',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: Text('Staff Profile', style: AppTextStyles.h4Bold),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -62,11 +58,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               child: Text(
                                 state.active.name.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTextStyles.smallRedText,
                               ),
                             ),
                           ],
@@ -130,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: _buildActionButton(
+                        child: ActionButton(
                           text: 'Edit Roles',
                           backgroundColor: Colors.white,
                           textColor: Colors.teal,
@@ -140,9 +132,9 @@ class ProfileScreen extends StatelessWidget {
                               ).pushNamed(Navigation.editProfileScreen)),
                         ),
                       ),
-                      const SizedBox(width: 15),
+                      const SizedBox(width: Dimens.paddingHorizontal),
                       Expanded(
-                        child: _buildActionButton(
+                        child: ActionButton(
                           text: 'Reset Account',
                           backgroundColor: Colors.white,
                           textColor: Colors.teal,
@@ -164,34 +156,9 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> _clearToken(BuildContext context) async {
-    await SharedPrefs.remove('auth_token');
+    await SharedPrefs.remove(Constants.authTokenKey);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacementNamed(Navigation.loginScreen);
     });
-  }
-
-  Widget _buildActionButton({
-    required String text,
-    required Color backgroundColor,
-    required Color textColor,
-    required VoidCallback onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: textColor,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-            side: BorderSide(color: textColor.withValues(alpha: .3), width: 1),
-          ),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        child: Text(text),
-      ),
-    );
   }
 }

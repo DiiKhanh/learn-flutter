@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:my_app/configs/constants.dart';
 import 'package:my_app/utils/shared_prefs.dart';
 
 class DioInterceptor extends Interceptor {
-  static const String _tokenKey = 'auth_token';
-
   @override
   void onRequest(
     RequestOptions options,
@@ -17,6 +16,6 @@ class DioInterceptor extends Interceptor {
   }
 
   Future<String?> _getToken() async {
-    return SharedPrefs.getString(_tokenKey);
+    return SharedPrefs.getString(Constants.authTokenKey);
   }
 }

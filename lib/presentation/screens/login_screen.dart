@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/applications/cubits/login_state.dart';
+import 'package:my_app/configs/constants.dart';
 import 'package:my_app/configs/navigation.dart';
 import 'package:my_app/configs/ui/dimens.dart';
-import 'package:my_app/cubits/login_cubit.dart';
+import 'package:my_app/applications/cubits/login_cubit.dart';
 import 'package:my_app/utils/validation.dart';
 import 'package:my_app/utils/shared_prefs.dart';
 
@@ -26,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _checkTokenAndNavigate() async {
-    final token = SharedPrefs.getString('auth_token');
+    final token = SharedPrefs.getString(Constants.authTokenKey);
     if (token != null && token.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pushReplacementNamed(Navigation.profileScreen);
