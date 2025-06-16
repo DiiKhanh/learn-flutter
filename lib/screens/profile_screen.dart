@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/configs/navigation.dart';
+import 'package:my_app/configs/ui/app_text_styles.dart';
+import 'package:my_app/configs/ui/dimens.dart';
 import 'package:my_app/cubits/profile_cubit.dart';
 import 'package:my_app/widgets/avatar.dart';
 import 'package:my_app/widgets/info_card.dart';
@@ -36,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(Dimens.padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -45,20 +47,13 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       // Avatar
                       Avatar(text: state.username.substring(0, 1)),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: Dimens.boxWidth),
                       // Name and Status
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              state.name,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
+                            Text(state.name, style: AppTextStyles.h4Bold),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 0,
@@ -78,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
                   // Contact Information
                   InfoCardWidget(
                     icon: Icons.phone,
@@ -86,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'PHONE NUMBER',
                     content: state.phone,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
 
                   InfoCardWidget(
                     icon: Icons.email,
@@ -94,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
                     title: 'EMAIL',
                     content: state.email,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
 
                   // Address and Nationality
                   InfoCardWidget(
@@ -103,44 +98,34 @@ class ProfileScreen extends StatelessWidget {
                     title: 'ADDRESS',
                     content: state.address,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
+
                   InfoCardWidget(
                     icon: Icons.public,
                     iconColor: Colors.teal,
                     title: 'NATIONALITY',
                     content: state.nationality,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
+
                   const Separator(color: Colors.grey),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
 
                   // Roles Section
-                  const Text(
-                    'Roles',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
+                  Text('Roles', style: AppTextStyles.textLabel),
+                  const SizedBox(height: Dimens.boxHeight),
 
                   const TagWidget(text: 'FINANCE'),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
+
                   const Separator(color: Colors.grey),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: Dimens.boxHeight),
 
                   // Action Section
-                  const Text(
-                    'Action',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  Text('Action', style: AppTextStyles.textLabel),
+                  const SizedBox(height: Dimens.boxHeight),
+
                   Row(
                     children: [
                       Expanded(

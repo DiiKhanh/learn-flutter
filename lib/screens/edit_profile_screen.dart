@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/configs/ui/dimens.dart';
 import 'package:my_app/cubits/profile_cubit.dart';
 import 'package:my_app/widgets/avatar.dart';
+import 'package:my_app/widgets/dropdown_field_info.dart';
 import 'package:my_app/widgets/tag.dart';
+import 'package:my_app/widgets/text_field_info.dart';
+import 'package:my_app/widgets/text_label_info.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -19,14 +23,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
   late final TextEditingController _addressController;
-  // late final TextEditingController _selectedNationality;
+  late final TextEditingController _nationalityController;
 
-  String _selectedNationality = 'Vietnam';
   final List<String> _nationalities = [
     'Vietnam',
     'United States',
     'United Kingdom',
     'Japan',
+    'China',
     'Other',
   ];
 
@@ -38,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
     _addressController = TextEditingController();
-    // _selectedNationality = TextEditingController();
+    _nationalityController = TextEditingController();
 
     context.read<ProfileCubit>().loadProfile();
   }
@@ -50,6 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
+    _nationalityController.dispose();
     super.dispose();
   }
 
@@ -95,6 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             _emailController.text = state.email;
             _phoneController.text = state.phone;
             _addressController.text = state.address;
+            _nationalityController.text = state.nationality;
           }
         },
         builder: (context, state) {
@@ -102,7 +108,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(Dimens.padding),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -154,8 +160,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Account Field (Disabled)
-                        _buildFieldLabel('ACCOUNT'),
-                        _buildTextField(
+                        const TextLabelInfo(label: 'ACCOUNT'),
+                        TextFieldInfo(
                           controller: _accountController,
                           hintText: 'Account username',
                           enabled: false,
@@ -164,8 +170,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 24),
 
                         // Name Field
-                        _buildFieldLabel('NAME'),
-                        _buildTextField(
+                        const TextLabelInfo(label: 'NAME'),
+                        TextFieldInfo(
                           controller: _nameController,
                           hintText: 'Full name',
                         ),
@@ -173,8 +179,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 24),
 
                         // Email Field
-                        _buildFieldLabel('EMAIL'),
-                        _buildTextField(
+                        const TextLabelInfo(label: 'EMAIL'),
+                        TextFieldInfo(
                           controller: _emailController,
                           hintText: 'Email address',
                         ),
@@ -182,8 +188,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 24),
 
                         // Phone Number Field
-                        _buildFieldLabel('PHONE NUMBER'),
-                        _buildTextField(
+                        const TextLabelInfo(label: 'PHONE NUMBER'),
+                        TextFieldInfo(
                           controller: _phoneController,
                           hintText: 'Phone number',
                         ),
@@ -191,17 +197,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 24),
 
                         // Address Field
-                        _buildFieldLabel('ADDRESS'),
-                        _buildTextField(
-                          controller: _addressController,
+                        const TextLabelInfo(label: 'ADDRESS'),
+                        TextFieldInfo(
+                          controller: _phoneController,
                           hintText: 'Address',
                         ),
 
                         const SizedBox(height: 24),
 
                         // Nationality Field
-                        _buildFieldLabel('NATIONALITY'),
-                        _buildDropdownField(),
+                        const TextLabelInfo(label: 'NATIONALITY'),
+                        DropdownFieldInfo(
+                          items: _nationalities,
+                          value: _nationalityController.text,
+                          onChanged: (value) {
+                            _onChangeNationlity(value);
+                          },
+                        ),
                       ],
                     ),
 
@@ -212,17 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<ProfileCubit>().updateProfile(
-                              name: _nameController.text,
-                              email: _emailController.text,
-                              phone: _phoneController.text,
-                              address: _addressController.text,
-                              nationality: _selectedNationality,
-                            );
-                          }
-                        },
+                        onPressed: _onUpdateProfile,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[400],
                           shape: RoundedRectangleBorder(
@@ -252,116 +254,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildFieldLabel(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey[600],
-          letterSpacing: 0.5,
-        ),
-      ),
-    );
+  void _onChangeNationlity(String? newValue) {
+    _nationalityController.text = newValue!;
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    bool enabled = true,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: enabled ? Colors.white : Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: controller,
-        enabled: enabled,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 18,
-          ),
-          filled: true,
-          fillColor: enabled ? Colors.white : Colors.grey[100],
-        ),
-        style: TextStyle(
-          fontSize: 16,
-          color: enabled ? Colors.black : Colors.grey[600],
-        ),
-        validator:
-            enabled
-                ? (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field is required';
-                  }
-                  return null;
-                }
-                : null,
-      ),
-    );
-  }
-
-  Widget _buildDropdownField() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: DropdownButtonFormField<String>(
-        value: _selectedNationality,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 18,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-        ),
-        icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-        items:
-            _nationalities.map((String nationality) {
-              return DropdownMenuItem<String>(
-                value: nationality,
-                child: Text(
-                  nationality,
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
-                ),
-              );
-            }).toList(),
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            _selectedNationality = newValue;
-          }
-        },
-      ),
-    );
+  void _onUpdateProfile() {
+    if (_formKey.currentState!.validate()) {
+      context.read<ProfileCubit>().updateProfile(
+        name: _nameController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+        nationality: _nationalityController.text,
+      );
+    }
   }
 }

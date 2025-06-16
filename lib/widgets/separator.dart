@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/configs/ui/dimens.dart';
 
 class Separator extends StatelessWidget {
-  const Separator({Key? key, this.height = 1, this.color = Colors.black})
-    : super(key: key);
+  const Separator({super.key, this.height = 1, this.color = Colors.black});
   final double height;
   final Color color;
 
@@ -11,10 +11,12 @@ class Separator extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final boxWidth = constraints.constrainWidth();
-        const dashWidth = 10.0;
+        const dashWidth = Dimens.dashWidth;
         final dashHeight = height;
         final dashCount = (boxWidth / (2 * dashWidth)).floor();
         return Flex(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          direction: Axis.horizontal,
           children: List.generate(dashCount, (_) {
             return SizedBox(
               width: dashWidth,
@@ -22,8 +24,6 @@ class Separator extends StatelessWidget {
               child: DecoratedBox(decoration: BoxDecoration(color: color)),
             );
           }),
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          direction: Axis.horizontal,
         );
       },
     );

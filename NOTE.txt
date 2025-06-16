@@ -1,0 +1,14 @@
+tổ chức widget
+viết utils hàm
+const các biến về theme
+tổ chức model state
+tổ chức lại BlocProvider
+TÌM HIỂU TỔ CHỨC STATE TRONG CUBIT
+--
+dùng dio fetch data
+tổ chức theo repository, model
+-
+check token
+--
+hỏi
+- model define các thuộc tính, vậy request không cần hết những thuộc tính đó thì sao, response không cần maping hết các data đó thì sao?

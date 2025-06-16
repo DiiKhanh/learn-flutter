@@ -15,7 +15,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           email: 'hoang.nguyen@stacktech.org',
           phone: '+84912885565',
           address: 'Huynh Tan Phat Street, District 7',
-          nationality: 'Vietnam',
+          nationality: 'China',
           role: 'Operator Admin',
           active: ActiveAcount.activated,
         ),
