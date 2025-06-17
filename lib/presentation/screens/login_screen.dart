@@ -19,7 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _hidePassword = true;
+  // bool _hidePassword = true;
+  final ValueNotifier<bool> _hidePassword = ValueNotifier(true);
 
   @override
   void initState() {
@@ -104,25 +105,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: Dimens.boxHeight),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: _hidePassword,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _hidePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                    ValueListenableBuilder(
+                      valueListenable: _hidePassword,
+                      builder: (_, value, __) {
+                        return TextFormField(
+                          controller: _passwordController,
+                          obscureText: value,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                value ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: _onHidePassword,
+                            ),
                           ),
-                          onPressed: _onHidePassword,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (ValidationUtils.isEmpty(value)) {
-                          return 'Please enter your password';
-                        }
-                        return null;
+                          validator: (value) {
+                            if (ValidationUtils.isEmpty(value)) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: Dimens.boxHeight),
@@ -146,9 +150,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onHidePassword() {
-    setState(() {
-      _hidePassword = !_hidePassword;
-    });
+    _hidePassword.value = !_hidePassword.value;
+    // setState(() {
+    //   _hidePassword.value = !_hidePassword;
+    // });
   }
 
   void _onLogin() {
